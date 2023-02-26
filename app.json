@@ -4,10 +4,10 @@
     "slug": "expo-login",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/gummozIcon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/images/splash_screen2.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
