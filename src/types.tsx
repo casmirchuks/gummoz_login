@@ -8,3 +8,12 @@ export interface signUpType {
   email: string,
   password: string
 }
+
+export type RootStackParamList  = {
+  Home:   undefined;
+  SignIn:  undefined;
+  SignUp: undefined;
+  ConfirmEmail: undefined;
+  ForgotPassword: undefined;
+  NewPassword: undefined;
+};

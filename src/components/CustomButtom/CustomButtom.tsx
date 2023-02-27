@@ -1,9 +1,7 @@
 import { View, Text, StyleSheet, Pressable } from 'react-native'
 import React, { FunctionComponent } from 'react'
 import { Colors } from '../colors'
-
-
-interface CustomButtomProps {
+type CustomButtomProps = {
   onPress: any,
   text: string,
   type?: string,
@@ -50,6 +48,7 @@ const styles = StyleSheet.create({
   },
   container_SECONDARY: {
     backgroundColor: Colors.graylight,
+    borderWidth: 2,
 
   },
   container_TERTIARY: {

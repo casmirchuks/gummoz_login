@@ -1,25 +1,18 @@
-import { StyleSheet, Text, View, SafeAreaView, StatusBar} from 'react-native';
 import React from 'react';
+import { StyleSheet, SafeAreaView} from 'react-native';
 import { Colors } from './src/components/colors';
 import { Provider } from 'react-redux'
 import { store } from './src/appRedux/store';
-
-import SignInScreen from './src/screens/signInScreen';
-import SignUpScreen from './src/screens/signUpScreen';
-import ConfirmEmailScrenn from './src/screens/confirmEmailScrenn';
+import Navigation from './src/navigation';
 
 export default function App() {
  
   return (
-    <>
-    <Provider store={store}>
-      <SafeAreaView style={styles.root}>
-          {/* <SignInScreen/> */}
-          {/* <SignUpScreen/> */}
-          <ConfirmEmailScrenn />
-      </SafeAreaView>
-    </Provider>
-    </>
+      <Provider store={store}>
+        <SafeAreaView style={styles.root}>
+            <Navigation />
+        </SafeAreaView>
+      </Provider>
   );
 }
 

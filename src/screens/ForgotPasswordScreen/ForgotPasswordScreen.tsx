@@ -5,52 +5,48 @@ import { Colors } from '../../components/colors';
 
 import CustomButtom from '../../components/CustomButtom';
 import CustomInput from '../../components/CustomInput';
-import { RootStackParamList } from '../../types';
+
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from '../../types';
 
 type ScreenNavigationProps = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'ConfirmEmail'>;
+  navigation: NativeStackNavigationProp<RootStackParamList, 'ForgotPassword'>;
 };
 
-const ComfirmEmailScreen = ({ navigation }: ScreenNavigationProps) => {
-  const [ code, setCode ] = useState('')
+const ForgotPasswordScreen = ({ navigation }: ScreenNavigationProps) => {
+  const [ username, setUsername ] = useState('')
 
   const dispatch = useAppDispatch()
 
-  const onConfirmPressed = () => {
-    console.log('Confirmed Pressed');
-    navigation.navigate('Home');
+  const onSendPressed = () => {
+    console.log('Send Pressed');
   }
   const onSignInPressed = () => {
     console.log('Confirmed Pressed');
     navigation.navigate('SignIn')
   }
-  const onResendPressed = () => {
-    console.log('Confirmed Pressed');
-  }
+
+
 
   return (
     <ScrollView>
       <View style={styles.root}>
-        <Text style={styles.title}>Confirm your email</Text>
+        <Text style={styles.title}>Reset your password</Text>
         <CustomInput 
-          placeholer='Enter confirmation code' 
-          value={code}
-          setValue={setCode}
+          placeholer='Username' 
+          value={username}
+          setValue={setUsername}
         />
+        
         <CustomButtom 
-          onPress={onConfirmPressed} 
-          text='Confirm' 
+          onPress={onSendPressed} 
+          text='Send' 
         />
-        <CustomButtom 
-          onPress={onResendPressed} 
-          text="Resend Code"
-          type='SECONDARY'
-        />
+
         <CustomButtom 
           onPress={onSignInPressed} 
           text="Back to Sign In"
-          type='TERTIARY'
+          type='SECONDARY'
         />
       </View>
     </ScrollView>
@@ -77,4 +73,4 @@ const styles = StyleSheet.create({
     color: Colors.accent1
   }
 })
-export default ComfirmEmailScreen
+export default ForgotPasswordScreen

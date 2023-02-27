@@ -5,52 +5,55 @@ import { Colors } from '../../components/colors';
 
 import CustomButtom from '../../components/CustomButtom';
 import CustomInput from '../../components/CustomInput';
-import { RootStackParamList } from '../../types';
+
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from '../../types';
 
 type ScreenNavigationProps = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'ConfirmEmail'>;
+  navigation: NativeStackNavigationProp<RootStackParamList, 'NewPassword'>;
 };
 
-const ComfirmEmailScreen = ({ navigation }: ScreenNavigationProps) => {
+const NewPasswordScreen = ({ navigation }: ScreenNavigationProps) => {
   const [ code, setCode ] = useState('')
+  const [ newPassword, setNewPassword ] = useState('')
 
   const dispatch = useAppDispatch()
 
-  const onConfirmPressed = () => {
-    console.log('Confirmed Pressed');
-    navigation.navigate('Home');
+  const onSubmitPressed = () => {
+    console.log('Submit Pressed');
+    navigation.navigate('Home')
   }
   const onSignInPressed = () => {
     console.log('Confirmed Pressed');
     navigation.navigate('SignIn')
   }
-  const onResendPressed = () => {
-    console.log('Confirmed Pressed');
-  }
+
+
 
   return (
     <ScrollView>
       <View style={styles.root}>
-        <Text style={styles.title}>Confirm your email</Text>
+        <Text style={styles.title}>Reset your password</Text>
         <CustomInput 
-          placeholer='Enter confirmation code' 
+          placeholer='Code' 
           value={code}
           setValue={setCode}
         />
-        <CustomButtom 
-          onPress={onConfirmPressed} 
-          text='Confirm' 
+        <CustomInput 
+          placeholer='Enter your new password' 
+          value={newPassword}
+          setValue={setNewPassword}
         />
+        
         <CustomButtom 
-          onPress={onResendPressed} 
-          text="Resend Code"
-          type='SECONDARY'
+          onPress={onSubmitPressed} 
+          text='Submit' 
         />
+
         <CustomButtom 
           onPress={onSignInPressed} 
           text="Back to Sign In"
-          type='TERTIARY'
+          type='SECONDARY'
         />
       </View>
     </ScrollView>
@@ -77,4 +80,4 @@ const styles = StyleSheet.create({
     color: Colors.accent1
   }
 })
-export default ComfirmEmailScreen
+export default NewPasswordScreen

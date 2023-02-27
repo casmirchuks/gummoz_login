@@ -1,33 +1,42 @@
-import React, { useState} from 'react'
+import React, { FunctionComponent, useState} from 'react'
 import { View, Image, StyleSheet, useWindowDimensions, ScrollView} from 'react-native'
 import { useAppDispatch } from '../../appRedux/hook';
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { Colors } from '../../components/colors';
 import CustomButtom from '../../components/CustomButtom';
 import CustomInput from '../../components/CustomInput';
 import Logo from './../../../assets/images/gummozIcon.png'
 import SocialSignInButtom from '../../components/SocialSignInButtom';
+import { RootStackParamList } from '../../types';
 
-const signInScreen = () => {
+type ScreenNavigationProps = {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'SignIn'>;
+};
+
+
+const SignInScreen = ({ navigation }: ScreenNavigationProps) => {
   const [ username, setUsername ] = useState('')
   const [ password, setPassword ] = useState('')
 
   const {height} = useWindowDimensions();
 
-  const dispatch = useAppDispatch()
+  // const dispatch = useAppDispatch()
 
   const onSiginPressed = () => {
     console.log('signin Pressed');
+    // validate user
+    navigation.navigate('Home')
   }
   const onSignUpPressed = () => {
-    console.warn('signup Pressed');
+    console.log('signup Pressed');
+    navigation.navigate('SignUp');
   }
   
   const onForgotPasswordPressed = () => {
     console.log('forgot password Pressed');
+    navigation.navigate('ForgotPassword');
   }
-
-
 
   return (
     <ScrollView>
@@ -59,7 +68,6 @@ const signInScreen = () => {
           text='Forgot Password?'
           type='SECONDARY'
         />
-        
         <SocialSignInButtom />
         <CustomButtom 
           onPress={onSignUpPressed} 
@@ -84,4 +92,5 @@ const styles = StyleSheet.create({
     maxHeight: 200,
   }
 })
-export default signInScreen
+
+export default SignInScreen

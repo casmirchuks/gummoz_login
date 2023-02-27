@@ -6,8 +6,16 @@ import { Colors } from '../../components/colors';
 import CustomButtom from '../../components/CustomButtom';
 import CustomInput from '../../components/CustomInput';
 import SocialSignInButtom from '../../components/SocialSignInButtom';
+import { RootStackParamList } from '../../types';
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-const signUpScreen = () => {
+
+type SignInScreenNavigationProps = {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'SignUp'>;
+};
+
+
+const SignUpScreen = ({ navigation }: SignInScreenNavigationProps) => {
   const [ username, setUsername ] = useState('')
   const [ email, setEmail ] = useState('')
   const [ password, setPassword ] = useState('')
@@ -17,11 +25,13 @@ const signUpScreen = () => {
   const dispatch = useAppDispatch()
 
   const onRegisterPressed = () => {
-    console.warn('Register Pressed');
+    console.log('Register Pressed');
+    navigation.navigate('ConfirmEmail')
   }
 
   const onSignInPressed = () => {
     console.log('SignIn Pressed');
+    navigation.navigate('SignIn')
   }
 
   return (
@@ -92,4 +102,4 @@ const styles = StyleSheet.create({
     color: Colors.accent1
   }
 })
-export default signUpScreen
+export default SignUpScreen
