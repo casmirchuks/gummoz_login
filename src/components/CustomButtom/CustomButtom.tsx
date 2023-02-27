@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Pressable } from 'react-native'
 import React, { FunctionComponent } from 'react'
 import { Colors } from '../colors'
 type CustomButtomProps = {
-  onPress: any,
+  onPress?: any,
   text: string,
   type?: string,
   bgColor?: string,

@@ -9,6 +9,7 @@ import CustomInput from '../../components/CustomInput';
 import Logo from './../../../assets/images/gummozIcon.png'
 import SocialSignInButtom from '../../components/SocialSignInButtom';
 import { RootStackParamList } from '../../types';
+import { signin } from '../../appRedux/authSlice';
 
 type ScreenNavigationProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'SignIn'>;
@@ -21,13 +22,15 @@ const SignInScreen = ({ navigation }: ScreenNavigationProps) => {
 
   const {height} = useWindowDimensions();
 
-  // const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch()
 
-  const onSiginPressed = () => {
+  const onSiginPressed =  () => {
     console.log('signin Pressed');
     // validate user
+    dispatch(signin({username, password}))    
     navigation.navigate('Home')
   }
+
   const onSignUpPressed = () => {
     console.log('signup Pressed');
     navigation.navigate('SignUp');
@@ -68,7 +71,9 @@ const SignInScreen = ({ navigation }: ScreenNavigationProps) => {
           text='Forgot Password?'
           type='SECONDARY'
         />
+        
         <SocialSignInButtom />
+
         <CustomButtom 
           onPress={onSignUpPressed} 
           text="Don't have an account? Create one"
