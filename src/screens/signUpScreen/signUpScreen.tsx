@@ -1,31 +1,46 @@
-import React, { useState} from 'react'
+import React from 'react'
 import { View, Text, StyleSheet, ScrollView} from 'react-native'
 import { useAppDispatch } from '../../appRedux/hook';
 import { Colors } from '../../components/colors';
+import { useForm, SubmitHandler } from 'react-hook-form'
+
 
 import CustomButtom from '../../components/CustomButtom';
 import CustomInput from '../../components/CustomInput';
 import SocialSignInButtom from '../../components/SocialSignInButtom';
 import { RootStackParamList } from '../../types';
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { signUp } from '../../appRedux/authSlice';
 
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
 type SignInScreenNavigationProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'SignUp'>;
 };
 
+interface IFormInput {
+  username: string;
+  email: string;
+  password: string;
+  passwordRepeat: string;
+}
 
 const SignUpScreen = ({ navigation }: SignInScreenNavigationProps) => {
-  const [ username, setUsername ] = useState('')
-  const [ email, setEmail ] = useState('')
-  const [ password, setPassword ] = useState('')
-  const [ passwordRepeat, setPasswordRepeat ] = useState('')
-
-
   const dispatch = useAppDispatch()
 
-  const onRegisterPressed = () => {
+  const {control, handleSubmit, formState: {errors}, watch} = useForm({
+    defaultValues: {
+      username: '',
+      email: '',
+      password: '',
+      passwordRepeat: '',
+    }
+  });
+
+  const pwd = watch('password')
+  const onRegisterPressed: SubmitHandler<IFormInput> = (data) => {
     console.log('Register Pressed');
+    dispatch(signUp(data))
     navigation.navigate('ConfirmEmail')
   }
 
@@ -39,29 +54,49 @@ const SignUpScreen = ({ navigation }: SignInScreenNavigationProps) => {
       <View style={styles.root}>
         <Text style={styles.title}>Create account</Text>
         <CustomInput 
-          placeholer='Username' 
-          value={username}
-          setValue={setUsername}
+          name='usernmae'
+          placeholer='Username'
+          control={control}  
+          rules={{required: 'Username is required'}}      
         />
         <CustomInput 
+          name='email'
           placeholer='Email' 
-          value={email}
-          setValue={setEmail}
+          control={control}  
+          rules={{
+            required: 'Email is required', 
+            pattern: {value: EMAIL_REGEX, message: 'Email is invalid'
+          }}}  
         />
         <CustomInput
+          name='password'
           placeholer='Password' 
-          value={password}
-          setValue={setPassword}
+          control={control}  
+          rules={{
+            required: 'Password is required',
+            minLength: {
+              value: 8, 
+              message: 'Password should be 8 character long'
+            }
+          }}  
           secureTextEntry
         />
         <CustomInput
+          name='passwordRepeat'
           placeholer='Repeat Password' 
-          value={passwordRepeat}
-          setValue={setPasswordRepeat}
+          control={control}  
+          rules={{
+            required: 'Please re-enter your password',
+            validate: (value: string) => value === pwd || "Password does not match",
+            minLength: {
+              value: 8, 
+              message: 'Password should be 8 character long'
+            }
+          }}  
           secureTextEntry
         />
         <CustomButtom 
-          onPress={onRegisterPressed} 
+          onPress={handleSubmit(onRegisterPressed)} 
           text='Register' 
         />
 

@@ -1,7 +1,9 @@
-import React, { useState} from 'react'
+import React from 'react'
 import { View, Text, StyleSheet, ScrollView} from 'react-native'
 import { useAppDispatch } from '../../appRedux/hook';
 import { Colors } from '../../components/colors';
+import { useForm, SubmitHandler } from 'react-hook-form'
+
 
 import CustomButtom from '../../components/CustomButtom';
 import CustomInput from '../../components/CustomInput';
@@ -12,12 +14,20 @@ type ScreenNavigationProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'ConfirmEmail'>;
 };
 
-const ComfirmEmailScreen = ({ navigation }: ScreenNavigationProps) => {
-  const [ code, setCode ] = useState('')
+interface IFormInput {
+  code: string;
+}
 
+const ComfirmEmailScreen = ({ navigation }: ScreenNavigationProps) => {
   const dispatch = useAppDispatch()
 
-  const onConfirmPressed = () => {
+  const {control, handleSubmit, formState: {errors}} = useForm({
+    defaultValues: {
+      code: '',
+    }
+  });
+
+  const onConfirmPressed: SubmitHandler<IFormInput> = () => {
     console.log('Confirmed Pressed');
     navigation.navigate('Home');
   }
@@ -34,12 +44,13 @@ const ComfirmEmailScreen = ({ navigation }: ScreenNavigationProps) => {
       <View style={styles.root}>
         <Text style={styles.title}>Confirm your email</Text>
         <CustomInput 
+          name="code"
           placeholer='Enter confirmation code' 
-          value={code}
-          setValue={setCode}
+          control={control} 
+          rules={{required: 'Enter confirmation code'}}  
         />
         <CustomButtom 
-          onPress={onConfirmPressed} 
+          onPress={handleSubmit(onConfirmPressed)} 
           text='Confirm' 
         />
         <CustomButtom 

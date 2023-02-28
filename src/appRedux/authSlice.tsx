@@ -1,22 +1,40 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { signInType } from '../types'
+import { auth, forgotPasswordType, signInType, signUpType } from '../types'
 
-const initialStateValue: signInType = {
-  username: '',
-  password: ''
+const initialStateValue: auth = {
+  signIn: {
+    username: '',
+    password: ''
+  },
+  signUp: {
+    username: '',
+    email: '',
+    password: '',
+    passwordRepeat: ''
+  },
+  forgotPassword: {
+    username: ''
+  }
 }
 
+
 export const authSlice = createSlice({
-  name: 'signin',
+  name: 'auth',
   initialState: {value: initialStateValue},
   reducers: {
-    signin: (state, action: PayloadAction<signInType>) => {
-      state.value = action.payload
-    }
+    signIn: (state, action: PayloadAction<signInType>) => {
+      state.value.signIn = action.payload
+    },
+    signUp: (state, action: PayloadAction<signUpType>) => {
+      state.value.signUp = action.payload
+    },
+    forgotPassword: (state, action: PayloadAction<forgotPasswordType>) => {
+      state.value.forgotPassword = action.payload
+    },
   }
 });
 
-export const { signin } = authSlice.actions
+export const { signIn, signUp, forgotPassword } = authSlice.actions
 
 export default authSlice.reducer
 
