@@ -1,25 +1,41 @@
 import { View, Text, TextInput, StyleSheet } from 'react-native'
 import React, { FunctionComponent } from 'react'
 import { Colors } from '../colors'
+import {  Controller } from 'react-hook-form'
+
 
 interface CustomInputProps {
-  value: string,
-  setValue: any
-  placeholer: string
+  placeholer?: string
   secureTextEntry?: boolean
+  control: any
+  name: any
+  rules: {}
 }
 
-const CustomInput:FunctionComponent<CustomInputProps> = ({value, setValue, placeholer, secureTextEntry}) => {
+const CustomInput:FunctionComponent<CustomInputProps> = ({control, rules={}, name, placeholer, secureTextEntry}) => {
   return (
-    <View style={Styles.Container}>
-      <TextInput 
-        value={value}
-        onChangeText={setValue}
-        placeholder={placeholer}
-        style={Styles.Input}
-        secureTextEntry={secureTextEntry}
+      <Controller
+        name={name} 
+        control={control}
+        rules={rules}
+        render={({field: {value, onChange, onBlur}, fieldState: {error}}) => (
+          <>
+          <View style={[Styles.Container, {borderColor: error ? Colors.primary : Colors.graydark}]}>
+            <TextInput 
+              value={value}
+              onChangeText={onChange} 
+              onBlur={onBlur} 
+              placeholder={placeholer}
+              style={[Styles.Input, {}]}
+              secureTextEntry={secureTextEntry}
+            /> 
+          </View>
+          {error && (
+            <Text style={{color: 'red', alignSelf: 'stretch'}}>{error.message || 'Error'}</Text>
+          )}
+          </>
+        )}
       />
-    </View>
   )
 };
 
@@ -29,7 +45,6 @@ const Styles = StyleSheet.create({
     width: '100%',
     padding: 15,
 
-    borderColor: Colors.primary,
     borderWidth: 1,
     borderRadius: 5,
 

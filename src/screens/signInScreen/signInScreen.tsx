@@ -1,7 +1,8 @@
-import React, { FunctionComponent, useState} from 'react'
+import React from 'react'
 import { View, Image, StyleSheet, useWindowDimensions, ScrollView} from 'react-native'
 import { useAppDispatch } from '../../appRedux/hook';
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useForm, SubmitHandler } from 'react-hook-form'
 
 import { Colors } from '../../components/colors';
 import CustomButtom from '../../components/CustomButtom';
@@ -9,35 +10,39 @@ import CustomInput from '../../components/CustomInput';
 import Logo from './../../../assets/images/gummozIcon.png'
 import SocialSignInButtom from '../../components/SocialSignInButtom';
 import { RootStackParamList } from '../../types';
-import { signin } from '../../appRedux/authSlice';
+import { signIn } from '../../appRedux/authSlice';
 
 type ScreenNavigationProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'SignIn'>;
 };
 
+interface IFormInput {
+  username: string;
+  password: string;
+}
 
 const SignInScreen = ({ navigation }: ScreenNavigationProps) => {
-  const [ username, setUsername ] = useState('')
-  const [ password, setPassword ] = useState('')
-
   const {height} = useWindowDimensions();
-
   const dispatch = useAppDispatch()
 
-  const onSiginPressed =  () => {
-    console.log('signin Pressed');
-    // validate user
-    dispatch(signin({username, password}))    
-    navigation.navigate('Home')
+  const {control, handleSubmit, formState: {errors}} = useForm({
+    defaultValues: {
+      username: '',
+      password: '',
+    }
+  });
+
+  const onSiginPressed: SubmitHandler<IFormInput> =  (data) => {
+    // Save to redux
+    dispatch(signIn(data))    
+    navigation.navigate('Home')        
   }
 
   const onSignUpPressed = () => {
-    console.log('signup Pressed');
     navigation.navigate('SignUp');
   }
   
   const onForgotPasswordPressed = () => {
-    console.log('forgot password Pressed');
     navigation.navigate('ForgotPassword');
   }
 
@@ -50,20 +55,26 @@ const SignInScreen = ({ navigation }: ScreenNavigationProps) => {
           resizeMode="contain" 
         />
         <CustomInput 
+          name="username"
           placeholer='Username' 
-          value={username}
-          setValue={setUsername}
-          secureTextEntry={false}
+          control={control}
+          rules={{required: 'Username is required'}}
         />
         <CustomInput
+          name="password"
           placeholer='Password' 
-          value={password}
-          setValue={setPassword}
-          secureTextEntry={true}
+          control={control}
+          rules={{
+            required: 'Password is required', 
+            minLength: {
+              value: 8, 
+              message: 'Password should be 8 character long'
+            },
+          }}
+          secureTextEntry
         />
 
-        <CustomButtom 
-          onPress={onSiginPressed} 
+        <CustomButtom onPress={handleSubmit(onSiginPressed)} 
           text='Sign In' 
         />
         <CustomButtom 

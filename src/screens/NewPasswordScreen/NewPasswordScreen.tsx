@@ -1,7 +1,8 @@
-import React, { useState} from 'react'
+import React from 'react'
 import { View, Text, StyleSheet, ScrollView} from 'react-native'
 import { useAppDispatch } from '../../appRedux/hook';
 import { Colors } from '../../components/colors';
+import { useForm, SubmitHandler } from 'react-hook-form'
 
 import CustomButtom from '../../components/CustomButtom';
 import CustomInput from '../../components/CustomInput';
@@ -13,13 +14,22 @@ type ScreenNavigationProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'NewPassword'>;
 };
 
-const NewPasswordScreen = ({ navigation }: ScreenNavigationProps) => {
-  const [ code, setCode ] = useState('')
-  const [ newPassword, setNewPassword ] = useState('')
+interface IFormInput {
+  code: string;
+  newPassword: string
+}
 
+const NewPasswordScreen = ({ navigation }: ScreenNavigationProps) => {
   const dispatch = useAppDispatch()
 
-  const onSubmitPressed = () => {
+  const {control, handleSubmit, formState: {errors}} = useForm({
+    defaultValues: {
+      code: '',
+      newPassword: ''
+    }
+  });
+
+  const onSubmitPressed: SubmitHandler<IFormInput> = () => {
     console.log('Submit Pressed');
     navigation.navigate('Home')
   }
@@ -35,18 +45,26 @@ const NewPasswordScreen = ({ navigation }: ScreenNavigationProps) => {
       <View style={styles.root}>
         <Text style={styles.title}>Reset your password</Text>
         <CustomInput 
+          name='code'
           placeholer='Code' 
-          value={code}
-          setValue={setCode}
+          control={control} 
+          rules={{required: 'Code is required'}}      
         />
         <CustomInput 
+          name='new password'
           placeholer='Enter your new password' 
-          value={newPassword}
-          setValue={setNewPassword}
+          control={control} 
+          rules={{
+            required: 'Enter new password',
+            minLength: {
+              value: 8, 
+              message: 'Password should be 8 character long'
+            },
+          }}       
         />
         
         <CustomButtom 
-          onPress={onSubmitPressed} 
+          onPress={handleSubmit(onSubmitPressed)} 
           text='Submit' 
         />
 
