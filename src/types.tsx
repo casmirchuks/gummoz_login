@@ -22,7 +22,7 @@ export type RootStackParamList  = {
   Home:   undefined;
   SignIn:  undefined;
   SignUp: undefined;
-  ConfirmEmail: undefined;
+  ConfirmEmail: {username: string};
   ForgotPassword: undefined;
   NewPassword: undefined;
 };

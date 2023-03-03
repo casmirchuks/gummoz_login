@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-gummozauthentication-staging-94743-authRole",
+      "UnauthRoleArn": "arn:aws:iam::802493664859:role/amplify-gummozauthentication-staging-94743-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::802493664859:role/amplify-gummozauthentication-staging-94743-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-gummozauthentication-staging-94743-deployment",
+      "UnauthRoleName": "amplify-gummozauthentication-staging-94743-unauthRole",
+      "StackName": "amplify-gummozauthentication-staging-94743",
+      "StackId": "arn:aws:cloudformation:us-east-1:802493664859:stack/amplify-gummozauthentication-staging-94743/f2cf68f0-b74c-11ed-84e9-0e1f30515e1d",
+      "AmplifyAppId": "d36fr827xnwx6m"
+    },
+    "categories": {
+      "auth": {
+        "GummozAuthentication": {}
+      }
+    }
+  }
+}
