@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, ScrollView} from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Alert} from 'react-native'
 import { useAppDispatch } from '../../appRedux/hook';
 import { Colors } from '../../components/colors';
 import { useForm, SubmitHandler } from 'react-hook-form'
@@ -11,6 +11,7 @@ import CustomInput from '../../components/CustomInput';
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from '../../types';
 import { forgotPassword } from '../../appRedux/authSlice';
+import { Auth } from 'aws-amplify';
 
 type ScreenNavigationProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'ForgotPassword'>;
@@ -29,13 +30,17 @@ const ForgotPasswordScreen = ({ navigation }: ScreenNavigationProps) => {
     }
   });
 
-  const onSendPressed: SubmitHandler<IFormInput> = (data) => {
+  const onSendPressed: SubmitHandler<IFormInput> = async (data) => {
     dispatch(forgotPassword(data))
-    navigation.navigate('NewPassword')
+    try {
+      await Auth.forgotPassword(data.username)
+      navigation.navigate('NewPassword')
+    } catch (error: any) {
+      Alert.alert('Oops', error.message)
+    }
   }
 
   const onSignInPressed = () => {
-    console.log('Confirmed Pressed');
     navigation.navigate('SignIn')
   }
 

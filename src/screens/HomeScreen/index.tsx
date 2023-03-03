@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Auth } from 'aws-amplify';
 
 // Component
 import CustomButtom from '../../components/CustomButtom'
@@ -14,15 +15,16 @@ type ScreenNavigationProps = {
 
 const Home = ({ navigation }: ScreenNavigationProps) => {
 
-  const logOutPressed = () => {
-    navigation.navigate('SignIn');
+  const onSignOutPressed = async () => {
+    await Auth.signOut();
+    // navigation.navigate('SignIn');
   }
   
   return (
     <View style={{ alignSelf: 'center', flex: 1, justifyContent: 'center'}}>
       <Text style={{fontSize: 24}}>Gummoz Spare Parts</Text>
       <CustomButtom 
-        text='Log Out' onPress={logOutPressed}    
+        text='Sign Out' onPress={onSignOutPressed}    
       />
     </View>
   )

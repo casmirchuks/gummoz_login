@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, Text, StyleSheet, ScrollView} from 'react-native'
+import React, { useState } from 'react'
+import { View, Text, StyleSheet, ScrollView, Alert} from 'react-native'
 import { useAppDispatch } from '../../appRedux/hook';
 import { Colors } from '../../components/colors';
 import { useForm, SubmitHandler } from 'react-hook-form'
@@ -11,6 +11,7 @@ import SocialSignInButtom from '../../components/SocialSignInButtom';
 import { RootStackParamList } from '../../types';
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { signUp } from '../../appRedux/authSlice';
+import { Auth } from 'aws-amplify'
 
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
@@ -19,6 +20,7 @@ type SignInScreenNavigationProps = {
 };
 
 interface IFormInput {
+  name: string,
   username: string;
   email: string;
   password: string;
@@ -27,9 +29,11 @@ interface IFormInput {
 
 const SignUpScreen = ({ navigation }: SignInScreenNavigationProps) => {
   const dispatch = useAppDispatch()
+  const [loading, setLoading ] = useState(false)
 
   const {control, handleSubmit, formState: {errors}, watch} = useForm({
     defaultValues: {
+      name: '',
       username: '',
       email: '',
       password: '',
@@ -38,10 +42,26 @@ const SignUpScreen = ({ navigation }: SignInScreenNavigationProps) => {
   });
 
   const pwd = watch('password')
-  const onRegisterPressed: SubmitHandler<IFormInput> = (data) => {
-    console.log('Register Pressed');
+
+  const onRegisterPressed: SubmitHandler<IFormInput> = async (data) => {
+    const {username, name, email, password} = data
+    if(loading){
+      return;
+    }
+
+    setLoading(true);
     dispatch(signUp(data))
-    navigation.navigate('ConfirmEmail')
+    try {
+      await Auth.signUp({
+        username,
+        password,
+        attributes: {email, name, preferred_username: username}
+      })
+      navigation.navigate('ConfirmEmail', {username});
+    } catch (error: any) {
+      Alert.alert('Oops', error.message)
+    }
+    setLoading(false);
   }
 
   const onSignInPressed = () => {
@@ -52,12 +72,39 @@ const SignUpScreen = ({ navigation }: SignInScreenNavigationProps) => {
   return (
     <ScrollView>
       <View style={styles.root}>
-        <Text style={styles.title}>Create account</Text>
+        <Text style={styles.title}>Create an account</Text>
+
+        <CustomInput 
+          name='name'
+          placeholer='Full Name'
+          control={control}  
+          rules={{
+            required: 'Name is required',
+            minLength: {
+              value: 3,
+              message: 'Username should be at least 3 characters long'
+            },
+            maxLength: {
+              value: 24,
+              message: 'Username should be at max 24 characters long'
+            },
+          }}      
+        />
         <CustomInput 
           name='usernmae'
           placeholer='Username'
           control={control}  
-          rules={{required: 'Username is required'}}      
+          rules={{
+            required: 'Username is required',
+            minLength: {
+              value: 3,
+              message: 'Username should be at least 3 characters long'
+            },
+            maxLength: {
+              value: 24,
+              message: 'Username should be at max 24 characters long'
+            },
+          }}      
         />
         <CustomInput 
           name='email'
@@ -97,7 +144,7 @@ const SignUpScreen = ({ navigation }: SignInScreenNavigationProps) => {
         />
         <CustomButtom 
           onPress={handleSubmit(onRegisterPressed)} 
-          text='Register' 
+          text={loading ? 'Loading... ' : 'Register' }
         />
 
         <Text style={styles.text}>By registering, you confirm to our {''}

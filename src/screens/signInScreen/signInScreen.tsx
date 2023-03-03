@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, Image, StyleSheet, useWindowDimensions, ScrollView} from 'react-native'
+import React, { useState } from 'react'
+import { View, Image, StyleSheet, useWindowDimensions, ScrollView, Alert} from 'react-native'
 import { useAppDispatch } from '../../appRedux/hook';
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useForm, SubmitHandler } from 'react-hook-form'
@@ -11,6 +11,7 @@ import Logo from './../../../assets/images/gummozIcon.png'
 import SocialSignInButtom from '../../components/SocialSignInButtom';
 import { RootStackParamList } from '../../types';
 import { signIn } from '../../appRedux/authSlice';
+import { Auth } from 'aws-amplify'
 
 type ScreenNavigationProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'SignIn'>;
@@ -24,6 +25,7 @@ interface IFormInput {
 const SignInScreen = ({ navigation }: ScreenNavigationProps) => {
   const {height} = useWindowDimensions();
   const dispatch = useAppDispatch()
+  const [loading, setLoading] = useState(false)
 
   const {control, handleSubmit, formState: {errors}} = useForm({
     defaultValues: {
@@ -32,10 +34,21 @@ const SignInScreen = ({ navigation }: ScreenNavigationProps) => {
     }
   });
 
-  const onSiginPressed: SubmitHandler<IFormInput> =  (data) => {
-    // Save to redux
+  const onSiginPressed: SubmitHandler<IFormInput> =  async (data) => {
+    const {username , password} = data
+    if(loading){
+      return;
+    }
+
+    setLoading(true)
     dispatch(signIn(data))    
-    navigation.navigate('Home')        
+    try {
+      await Auth.signIn(username, password)
+      navigation.navigate('Home');       
+    } catch (error: any) {
+      Alert.alert('Oops', error.message)
+    }
+    setLoading(false);
   }
 
   const onSignUpPressed = () => {
@@ -75,7 +88,7 @@ const SignInScreen = ({ navigation }: ScreenNavigationProps) => {
         />
 
         <CustomButtom onPress={handleSubmit(onSiginPressed)} 
-          text='Sign In' 
+          text={loading ? 'Loading..' :  'Sign In' }
         />
         <CustomButtom 
           onPress={onForgotPasswordPressed} 
